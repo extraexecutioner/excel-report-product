@@ -1,4 +1,5 @@
-import {onGetExcelStatsRequest} from './handler.js'
+import {onGetExcelStatsRequest, errorHandler} from './handler.js'
+
 import {onGetExcelStatsRequestSchema} from './schemas.js'
 import type {CustomFastifyInstance} from './server.js'
 
@@ -6,8 +7,11 @@ export default class Router {
     #app: CustomFastifyInstance
 
     #routes() {
-        this.#app.get("/files", {schema: onGetExcelStatsRequestSchema}, (request, reply) => {
-            
+        this.#app.get("/files", {schema: onGetExcelStatsRequestSchema, errorHandler: errorHandler}, (request, reply) => {
+            const body = request.body
+            const url = body.url
+
+            onGetExcelStatsRequest(url, reply)
         })
     }
 
